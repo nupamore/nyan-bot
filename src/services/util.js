@@ -19,7 +19,8 @@ function money(amount, decimalCount = 0, decimal = '.', thousands = ',') {
                   Math.abs(amount - i)
                       .toFixed(decimalCount)
                       .slice(2)
-                : '')
+                : '') +
+            '원'
         )
     } catch (e) {
         console.log(e)
@@ -27,10 +28,20 @@ function money(amount, decimalCount = 0, decimal = '.', thousands = ',') {
 }
 
 function percent(child, parent) {
-    return ((child / parent) * 100).toFixed(1)
+    const percent = ((child / parent) * 100).toFixed(1)
+    if (isNaN(percent)) return '0%'
+    else return `${percent}%`
+}
+
+function percentDiff(child, parent) {
+    const percent = ((child / parent) * 100).toFixed(1)
+    if (percent > 0) return `+${percent}%`
+    else if (percent < 0) return `${percent}%`
+    else return '0%'
 }
 
 module.exports = {
     money,
     percent,
+    percentDiff,
 }
