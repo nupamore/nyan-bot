@@ -28,13 +28,13 @@ function money(amount, decimalCount = 0, decimal = '.', thousands = ',') {
 }
 
 function percent(child, parent) {
-    const percent = ((child / parent) * 100).toFixed(1)
+    const percent = ((child / parent) * 100).toFixed(2)
     if (isNaN(percent)) return '0%'
     else return `${percent}%`
 }
 
 function percentDiff(child, parent) {
-    const percent = ((child / parent) * 100).toFixed(1)
+    const percent = ((child / parent) * 100).toFixed(2)
     if (percent > 0) return `+${percent}%`
     else if (percent < 0) return `${percent}%`
     else return '0%'

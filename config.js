@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 module.exports = {
+    SKIP_MONEY: 10000,
     channelId: process.env.DISCORD_CHANNEL_ID,
     api: {
         discordToken: process.env.DISCORD_TOKEN,
