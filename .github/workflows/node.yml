@@ -15,14 +15,14 @@ jobs:
       - uses: borales/actions-yarn@v2.0.0
         with:
           cmd: install
-    - name: Secret configs
-      shell: bash
-      env:
-        DOTENV: ${{ secrets.DOTENV }}
-      run: |
-        echo "$DOTENV" > .env
-    - name: test
-      run: node nyan-bot
+      - name: Secret configs
+        shell: bash
+        env:
+          DOTENV: ${{ secrets.DOTENV }}
+        run: |
+          echo "$DOTENV" > .env
+      - name: test
+        run: node nyan-bot
 
   deploy:
     runs-on: ubuntu-latest
