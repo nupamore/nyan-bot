@@ -7,6 +7,7 @@ function commands(msg) {
         msg.channel.send(Math.random() > 0.5 ? 'ㅇㅇ' : 'ㄴㄴ')
     }
     if (msg.content === '자산') require('./info')(msg)
+    if (msg.content === '펀비') require('./funding')(msg)
 }
 
 module.exports = commands

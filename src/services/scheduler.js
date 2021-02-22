@@ -1,6 +1,7 @@
 const config = require('../../config')
 const schedule = require('node-schedule')
 const { getInfo } = require('./info')
+const { nextFundingFee } = require('./funding')
 const { addHistory } = require('./db')
 const util = require('./util')
 
@@ -19,6 +20,18 @@ async function saveInfo(client) {
     })
 }
 
+async function fundingFee(client) {
+    const channel = await client.channels.fetch(config.channelId)
+    schedule.scheduleJob('0 1 0,8,16 * * *', async () => {
+        const { btc, eth } = await nextFundingFee()
+        const msg = `**바이빗 펀딩피**
+BTC: ${btc}
+ETH: ${eth}`
+        channel.send(msg)
+    })
+}
+
 module.exports = {
     saveInfo,
+    fundingFee,
 }

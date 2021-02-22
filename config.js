@@ -10,5 +10,6 @@ module.exports = {
         upbitSecret: process.env.UPBIT_SECRET_KEY,
         binanceAccess: process.env.BINANCE_ACCESS_KEY,
         binanceSecret: process.env.BINANCE_SECRET_KEY,
+        bybitUrl: 'https://api.bybit.com/v2',
     },
 }
