@@ -1,24 +1,39 @@
 const config = require('../../config')
 const axios = require('axios')
 const upbit = require('../api/upbit')
-const util = require('../services/util')
 
-async function getInfo() {
+async function kimchi() {
     const promises = await Promise.all([
-        axios('https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'),
+        axios(
+            'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD',
+        ),
         upbit.api('/ticker?markets=KRW-BTC'),
         upbit.api('/ticker?markets=KRW-ETH'),
         upbit.api('/ticker?markets=KRW-EOS'),
-        axios(config.api.bybitUrl + '/public/tickers?symbol=BTCUSDT'),
-        axios(config.api.bybitUrl + '/public/tickers?symbol=ETHUSDT'),
-        axios(config.api.bybitUrl + '/public/tickers?symbol=EOSUSDT'),
+        axios(config.api.binanceUrl + '/trades?symbol=BTCUSDT&limit=1'),
+        axios(config.api.binanceUrl + '/trades?symbol=ETHUSDT&limit=1'),
+        axios(config.api.binanceUrl + '/trades?symbol=EOSUSDT&limit=1'),
     ])
+    const data = {
+        dollar: promises[0].data[0].basePrice,
+        upbitBTC: promises[1][0].trade_price,
+        upbitETH: promises[2][0].trade_price,
+        upbitEOS: promises[3][0].trade_price,
+        binanceBTC: promises[4].data[0].price * 1,
+        binanceETH: promises[5].data[0].price * 1,
+        binanceEOS: promises[6].data[0].price * 1,
+        btcPre: 0,
+        ethPre: 0,
+        eosPre: 0,
+    }
 
-    const dollar = promises[0].data.basePrice
-    const upbitBTC = promises[1].trade_price
-    const upbitETH = promises[2].trade_price
-    const upbitEOS = promises[3].trade_price
-    console.log(promises[4].data.result)
+    data.btcPre = data.upbitBTC / (data.binanceBTC * data.dollar) - 1
+    data.ethPre = data.upbitETH / (data.binanceETH * data.dollar) - 1
+    data.eosPre = data.upbitEOS / (data.binanceEOS * data.dollar) - 1
+
+    return data
 }
 
-getInfo()
+module.exports = {
+    kimchi,
+}

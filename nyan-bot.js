@@ -6,7 +6,7 @@ const scheduler = require('./src/services/scheduler')
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
-    // scheduler.saveInfo(client)
+    scheduler.kimchiAlert(client)
     scheduler.fundingFee(client)
 })
 

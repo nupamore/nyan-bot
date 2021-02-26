@@ -8,6 +8,7 @@ function commands(msg) {
     }
     if (msg.content === '자산') require('./info')(msg)
     if (msg.content === '펀비') require('./funding')(msg)
+    if (msg.content === '김프') require('./kimchi')(msg)
 }
 
 module.exports = commands
