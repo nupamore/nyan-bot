@@ -6,7 +6,7 @@ const scheduler = require('./src/services/scheduler')
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`)
-    scheduler.saveInfo(client)
+    // scheduler.saveInfo(client)
     scheduler.fundingFee(client)
 })
 
