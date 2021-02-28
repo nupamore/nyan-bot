@@ -5,6 +5,7 @@ const { nextFundingFee } = require('./funding')
 const { addHistory } = require('./db')
 const util = require('./util')
 const { kimchi } = require('../services/kimchi')
+const { fundingPer } = require('../services/util')
 
 async function saveInfo(client) {
     const channel = await client.channels.fetch(config.channelId)
@@ -25,18 +26,19 @@ async function fundingFee(client) {
     const channel = await client.channels.fetch(config.channelId)
     schedule.scheduleJob('0 1 0,8,16 * * *', async () => {
         const { btc, eth, btcNext, ethNext } = await nextFundingFee()
-        const msg = `**현재**
-BTC: ${btc}
-ETH: ${eth}
-**예상**
-BTC: ${btcNext}
-ETH: ${ethNext}`
-        channel.send(msg)
+        let txt = '```diff\n'
+        txt += btc < 0 || eth < 0 ? '-' : '+'
+        txt += `바이빗 펀딩피 (현재 -> 예상)
+BTC: ${fundingPer(btc)} -> ${fundingPer(btcNext)}
+ETH: ${fundingPer(eth)} -> ${fundingPer(ethNext)}
+`
+        txt += '```'
+        channel.send(txt)
     })
 }
 
 function kimchiTxt({ btcPre, ethPre, eosPre }) {
-    return `업비트 <->바이낸스
+    return `
 BTC: ${(btcPre * 100).toFixed(2)}%
 ETH: ${(ethPre * 100).toFixed(2)}%
 EOS: ${(eosPre * 100).toFixed(2)}%
@@ -49,14 +51,15 @@ async function kimchiAlert(client) {
 
     schedule.scheduleJob('* */5 * * * *', async () => {
         const after = await kimchi()
+        let txt = '```diff\n'
 
         if (before.btcPre - after.btcPre > 0.01) {
-            channel.send('김프 1% 하락 알림')
-            channel.send(kimchiTxt(after))
+            txt += '- 김프 1% 하락 (Upbit / Binance)'
+            channel.send(txt + kimchiTxt(after) + '```')
             before = after
         } else if (before.btcPre - after.btcPre < -0.01) {
-            channel.send('김프 1% 상승 알림')
-            channel.send(kimchiTxt(after))
+            txt += '+ 김프 1% 상승 (Upbit / Binance)'
+            channel.send(txt + kimchiTxt(after) + '```')
             before = after
         }
     })

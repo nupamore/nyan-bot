@@ -10,10 +10,10 @@ async function nextFundingFee() {
     )
 
     return {
-        btc: btc.data.result[0].funding_rate * 100 + '%',
-        eth: eth.data.result[0].funding_rate * 100 + '%',
-        btcNext: btc.data.result[0].predicted_funding_rate * 100 + '%',
-        ethNext: eth.data.result[0].predicted_funding_rate * 100 + '%',
+        btc: btc.data.result[0].funding_rate * 100,
+        eth: eth.data.result[0].funding_rate * 100,
+        btcNext: btc.data.result[0].predicted_funding_rate * 100,
+        ethNext: eth.data.result[0].predicted_funding_rate * 100,
     }
 }
 

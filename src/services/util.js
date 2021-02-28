@@ -40,8 +40,13 @@ function percentDiff(child, parent) {
     else return '0%'
 }
 
+function fundingPer(num) {
+    return num.toFixed(4) + '%'
+}
+
 module.exports = {
     money,
     percent,
     percentDiff,
+    fundingPer,
 }
