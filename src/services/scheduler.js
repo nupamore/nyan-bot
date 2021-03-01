@@ -38,11 +38,11 @@ ETH: ${fundingPer(eth)} -> ${fundingPer(ethNext)}
 }
 
 function kimchiTxt({ btcPre, ethPre, eosPre }) {
-    return `
-BTC: ${(btcPre * 100).toFixed(2)}%
-ETH: ${(ethPre * 100).toFixed(2)}%
-EOS: ${(eosPre * 100).toFixed(2)}%
-    `
+    let txt = '\nBTC, ETH, EOS: '
+    txt += `${(btcPre * 100).toFixed(2)}%`
+    txt += `, ${(ethPre * 100).toFixed(2)}%`
+    txt += `, ${(eosPre * 100).toFixed(2)}%`
+    return txt
 }
 
 async function kimchiAlert(client) {
