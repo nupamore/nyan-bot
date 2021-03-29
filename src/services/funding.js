@@ -8,12 +8,17 @@ async function nextFundingFee() {
     const eth = await axios(
         config.api.bybitUrl + '/public/tickers?symbol=ETHUSD',
     )
+    const eos = await axios(
+        config.api.bybitUrl + '/public/tickers?symbol=EOSUSD',
+    )
 
     return {
         btc: btc.data.result[0].funding_rate * 100,
         eth: eth.data.result[0].funding_rate * 100,
+        eos: eos.data.result[0].funding_rate * 100,
         btcNext: btc.data.result[0].predicted_funding_rate * 100,
         ethNext: eth.data.result[0].predicted_funding_rate * 100,
+        eosNext: eos.data.result[0].predicted_funding_rate * 100,
     }
 }
 
