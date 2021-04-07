@@ -50,7 +50,7 @@ async function kimchiAlert(client) {
     const channel = await client.channels.fetch(config.channelId)
     let before = await kimchi()
 
-    schedule.scheduleJob('* */5 * * * *', async () => {
+    schedule.scheduleJob('0 */2 * * * *', async () => {
         const after = await kimchi()
         let txt = '```diff\n'
 
