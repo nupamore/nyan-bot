@@ -51,7 +51,7 @@ function repeat(fn, count, lastCallback) {
     }
     setTimeout(() => {
         fn()
-        repeat(fn, --count)
+        repeat(fn, --count, lastCallback)
     }, 2000)
 }
 
