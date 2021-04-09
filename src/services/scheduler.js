@@ -4,7 +4,7 @@ const { getInfo } = require('./info')
 const { nextFundingFee } = require('./funding')
 const { addHistory } = require('./db')
 const util = require('./util')
-const { kimchi } = require('../services/kimchi')
+const { kimchi, kimchiTxt } = require('../services/kimchi')
 const { fundingPer } = require('../services/util')
 
 async function saveInfo(client) {
@@ -38,32 +38,40 @@ EOS: ${fundingPer(eos)} -> ${fundingPer(eosNext)}
     })
 }
 
-function kimchiTxt({ btcPre, ethPre, eosPre }) {
-    let txt = '\nBTC, ETH, EOS: '
-    txt += `${(btcPre * 100).toFixed(2)}%`
-    txt += `, ${(ethPre * 100).toFixed(2)}%`
-    txt += `, ${(eosPre * 100).toFixed(2)}%`
-    return txt
-}
-
 async function kimchiAlert(client) {
+    const condition = 0.01
     const channel = await client.channels.fetch(config.channelId)
+
+    function text(kimchi, diff) {
+        const dp = Math.abs(diff * 100).toFixed(1)
+        let txt = '```diff\n'
+        txt += diff > 0
+            ? `- 김프 ${dp}% 하락 (Upbit / Binance)\n`
+            : `+ 김프 ${dp}% 상승 (Upbit / Binance)\n`
+        txt += kimchiTxt(kimchi)
+        txt += '```'
+        return txt
+    }
+
     let before = await kimchi()
 
     schedule.scheduleJob('0 */5 * * * *', async () => {
         const after = await kimchi()
-        let txt = '```diff\n'
         const diff = before.btcPre - after.btcPre
-        const dp = (diff * 100).toFixed(1)
 
-        if (diff > 0.01) {
-            txt += `- 김프 ${dp}% 하락 (Upbit / Binance)`
-            channel.send(txt + kimchiTxt(after) + '```')
-            before = after
-        } else if (diff < -0.01) {
-            txt += `+ 김프 ${dp}% 상승 (Upbit / Binance)`
-            channel.send(txt + kimchiTxt(after) + '```')
-            before = after
+        if (diff > condition || diff < -condition) {
+            const message = await channel.send(text(after, diff))
+
+            util.repeat(async () => {
+                    const after = await kimchi()
+                    const diff = before.btcPre - after.btcPre
+                    message.edit(text(after, diff))
+                },
+                30,
+                async () => {
+                    before = await kimchi()
+                },
+            )
         }
     })
 }

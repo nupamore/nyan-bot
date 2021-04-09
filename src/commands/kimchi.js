@@ -1,31 +1,17 @@
-const { kimchi } = require('../services/kimchi')
+const { kimchi, kimchiTxt } = require('../services/kimchi')
+const { repeat } = require('../services/util')
 
-async function kimchiText() {
-    const { btcPre, ethPre, eosPre } = await kimchi()
-    const now = new Date()
+async function text() {
     let txt = '```\n'
-    txt += `김프 1분간 실시간 (Upbit / Binance)\n`
-    txt += 'BTC, ETH, EOS: '
-    txt += `${(btcPre * 100).toFixed(2)}%`
-    txt += `, ${(ethPre * 100).toFixed(2)}%`
-    txt += `, ${(eosPre * 100).toFixed(2)}%`
-    txt += '\n```'
+    txt += `김치 프리미엄 (Upbit / Binance)\n`
+    txt += kimchiTxt(await kimchi())
+    txt += '```'
     return txt
 }
 
-function repeat(fn, count) {
-    if (!count) return false
-    setTimeout(() => {
-        fn()
-        repeat(fn, --count)
-    }, 2000)
-}
-
 module.exports = async function (msg) {
-    const text = await kimchiText()
-    const message = await msg.channel.send(text)
-
+    const message = await msg.channel.send(await text())
     repeat(async () => {
-        message.edit(await kimchiText())
+        message.edit(await text())
     }, 30)
 }

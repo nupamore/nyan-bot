@@ -2,15 +2,17 @@ const config = require('../../config')
 const axios = require('axios')
 
 async function nextFundingFee() {
-    const btc = await axios(
-        config.api.bybitUrl + '/public/tickers?symbol=BTCUSD',
-    )
-    const eth = await axios(
-        config.api.bybitUrl + '/public/tickers?symbol=ETHUSD',
-    )
-    const eos = await axios(
-        config.api.bybitUrl + '/public/tickers?symbol=EOSUSD',
-    )
+    const [ btc,eth,eos ] = await Promise.all([
+        axios(
+            config.api.bybitUrl + '/public/tickers?symbol=BTCUSD',
+        ),
+        axios(
+            config.api.bybitUrl + '/public/tickers?symbol=ETHUSD',
+        ),
+        axios(
+            config.api.bybitUrl + '/public/tickers?symbol=EOSUSD',
+        ),
+    ])
 
     return {
         btc: btc.data.result[0].funding_rate * 100,

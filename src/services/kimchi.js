@@ -34,6 +34,15 @@ async function kimchi() {
     return data
 }
 
+function kimchiTxt({ btcPre, ethPre, eosPre }) {
+    let txt = 'BTC, ETH, EOS: '
+    txt += `${(btcPre * 100).toFixed(2)}%`
+    txt += `, ${(ethPre * 100).toFixed(2)}%`
+    txt += `, ${(eosPre * 100).toFixed(2)}%`
+    return txt
+}
+
 module.exports = {
     kimchi,
+    kimchiTxt,
 }

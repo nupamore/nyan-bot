@@ -44,9 +44,21 @@ function fundingPer(num) {
     return num.toFixed(4) + '%'
 }
 
+function repeat(fn, count, lastCallback) {
+    if (!count) {
+        if (lastCallback) lastCallback()
+        return false
+    }
+    setTimeout(() => {
+        fn()
+        repeat(fn, --count)
+    }, 2000)
+}
+
 module.exports = {
     money,
     percent,
     percentDiff,
     fundingPer,
+    repeat,
 }
