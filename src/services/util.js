@@ -44,16 +44,27 @@ function fundingPer(num) {
     return num.toFixed(4) + '%'
 }
 
+const spinner = {
+    arr: ['⠋', '⠙', '⠴', '⠦'],
+    frame: -1,
+    get now() {
+        return this.frame < 0 ? '' : this.arr[this.frame % 4]
+    }
+}
+
 function repeat(fn, count, lastCallback) {
     if (!count) {
         if (lastCallback) lastCallback()
         return false
     }
-    setTimeout(() => {
-        fn()
+    if (count == 1) spinner.frame = -1
+    else spinner.frame++
+    setTimeout(async () => {
+        await fn()
         repeat(fn, --count, lastCallback)
-    }, 2000)
+    }, 1000)
 }
+repeat.spinner = spinner
 
 module.exports = {
     money,

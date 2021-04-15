@@ -46,8 +46,8 @@ async function kimchiAlert(client) {
         const dp = Math.abs(diff * 100).toFixed(1)
         let txt = '```diff\n'
         txt += diff > 0
-            ? `- 김프 ${dp}% 하락 (Upbit / Binance)\n`
-            : `+ 김프 ${dp}% 상승 (Upbit / Binance)\n`
+            ? `- 김프 ${dp}% 하락 (Upbit / Binance) ${repeat.spinner.now}\n`
+            : `+ 김프 ${dp}% 상승 (Upbit / Binance) ${repeat.spinner.now}\n`
         txt += kimchiTxt(kimchi)
         txt += '```'
         return txt
@@ -65,7 +65,7 @@ async function kimchiAlert(client) {
             util.repeat(async () => {
                     const after = await kimchi()
                     const diff = before.btcPre - after.btcPre
-                    message.edit(text(after, diff))
+                    return message.edit(text(after, diff))
                 },
                 30,
                 async () => {
