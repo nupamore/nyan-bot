@@ -3,7 +3,7 @@ const schedule = require('node-schedule')
 const { getInfo } = require('./info')
 const { nextFundingFee } = require('./funding')
 const { addHistory } = require('./db')
-const util = require('./util')
+const { money, repeat } = require('./util')
 const { kimchi, kimchiTxt } = require('../services/kimchi')
 const { fundingPer } = require('../services/util')
 
@@ -16,8 +16,8 @@ async function saveInfo(client) {
         addHistory(info)
 
         const msg = `**${info.date}**
-총 자산: ${util.money(info.won)}
-코인 매수가: ${util.money(info.coin)} (자산의 ${info.coinPerWon})`
+총 자산: ${money(info.won)}
+코인 매수가: ${money(info.coin)} (자산의 ${info.coinPerWon})`
         channel.send(msg)
     })
 }
@@ -62,7 +62,7 @@ async function kimchiAlert(client) {
         if (diff > condition || diff < -condition) {
             const message = await channel.send(text(after, diff))
 
-            util.repeat(async () => {
+            repeat(async () => {
                     const after = await kimchi()
                     const diff = before.btcPre - after.btcPre
                     return message.edit(text(after, diff))
