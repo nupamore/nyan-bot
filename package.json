@@ -4,6 +4,9 @@
   "main": "nyan-bot.js",
   "repository": "https://github.com/nupamore/nyan-bot.git",
   "author": "nupamore",
+  "scripts": {
+    "dev": "node nyan-bot.js"
+  },
   "dependencies": {
     "axios": "^0.21.0",
     "discord.js": "^12.5.1",

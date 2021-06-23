@@ -11,6 +11,6 @@ module.exports = {
         binanceAccess: process.env.BINANCE_ACCESS_KEY,
         binanceSecret: process.env.BINANCE_SECRET_KEY,
         bybitUrl: 'https://api.bybit.com/v2',
-        binanceUrl: 'https://api.binance.cc/api/v3',
+        binanceUrl: 'https://api.binance.com/api/v3',
     },
 }

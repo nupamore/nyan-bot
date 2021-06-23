@@ -25,7 +25,14 @@ async function saveInfo(client) {
 async function fundingFee(client) {
     const channel = await client.channels.fetch(config.channelId)
     schedule.scheduleJob('0 1 0,8,16 * * *', async () => {
-        const { btc, eth, eos, btcNext, ethNext, eosNext } = await nextFundingFee()
+        const {
+            btc,
+            eth,
+            eos,
+            btcNext,
+            ethNext,
+            eosNext,
+        } = await nextFundingFee()
         let txt = '```diff\n'
         txt += btc < 0 || eth < 0 ? '-' : '+'
         txt += ` 바이빗 펀딩피 (현재 -> 예상)
@@ -45,9 +52,10 @@ async function kimchiAlert(client) {
     function text(kimchi, diff) {
         const dp = Math.abs(diff * 100).toFixed(1)
         let txt = '```diff\n'
-        txt += diff > 0
-            ? `- 김프 ${dp}% 하락 (Upbit / Binance) ${repeat.spinner.now}\n`
-            : `+ 김프 ${dp}% 상승 (Upbit / Binance) ${repeat.spinner.now}\n`
+        txt +=
+            diff > 0
+                ? `- 김프 ${dp}% 하락 (Upbit / Binance) ${repeat.spinner.now}\n`
+                : `+ 김프 ${dp}% 상승 (Upbit / Binance) ${repeat.spinner.now}\n`
         txt += kimchiTxt(kimchi)
         txt += '```'
         return txt
@@ -62,7 +70,8 @@ async function kimchiAlert(client) {
         if (diff > condition || diff < -condition) {
             const message = await channel.send(text(after, diff))
 
-            repeat(async () => {
+            repeat(
+                async () => {
                     const after = await kimchi()
                     const diff = before.btcPre - after.btcPre
                     return message.edit(text(after, diff))
