@@ -1,3 +1,3 @@
 # nyan-bot
 
-test
+deploy
